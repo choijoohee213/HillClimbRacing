@@ -1,25 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CarController : MonoBehaviour
-{
-    [SerializeField]
-    WheelJoint2D frontTire, backTire;
+public class CarController : MonoBehaviour {
 
     [SerializeField]
-    float speed;
-    float movement,moveSpeed, fuel = 1, fuelConsumption = 0.1f;
-    public float Fuel { get => fuel;  set { fuel = value; } }
+    private WheelJoint2D frontTire, backTire;
+
+    [SerializeField]
+    private float speed;
+
+    private float movement, moveSpeed, fuel = 1, fuelConsumption = 0.1f;
+    public float Fuel { get => fuel; set { fuel = value; } }
 
     public Vector3 StartPos { get; set; }
 
-
-    
-    
-    void Update()
-    {
+    private void Update() {
         //movement = Input.GetAxis("Horizontal");
         if(GameManager.Instance.GasBtnPressed) {
             movement += 0.009f;
@@ -37,16 +31,16 @@ public class CarController : MonoBehaviour
         moveSpeed = movement * speed;
 
         GameManager.Instance.FuelConsume();  //계속해서 연료가 소모됨
-     }
+    }
 
-    void FixedUpdate() {
+    private void FixedUpdate() {
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, StartPos.x, transform.position.x), transform.position.y);
 
         if(moveSpeed.Equals(0) || fuel <= 0) {   //버튼을 누르지 않거나 연료가 없을 경우 차를 멈춤
             frontTire.useMotor = false;
             backTire.useMotor = false;
         }
-        else {  
+        else {
             frontTire.useMotor = true;
             backTire.useMotor = true;
             JointMotor2D motor = new JointMotor2D();
@@ -58,9 +52,4 @@ public class CarController : MonoBehaviour
 
         fuel -= fuelConsumption * Mathf.Abs(movement) * Time.fixedDeltaTime;
     }
-
-   
-  
-
-    
 }

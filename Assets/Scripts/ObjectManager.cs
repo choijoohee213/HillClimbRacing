@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectManager : MonoBehaviour {
+
     [SerializeField]
-    GameObject[] objectPrefabs;
+    private GameObject[] objectPrefabs;
 
-    List<GameObject> pooledObjs = new List<GameObject>();
-
+    private List<GameObject> pooledObjs = new List<GameObject>();
 
     private GameObject Generate(string type, bool isActive) {
         for(int i = 0; i < objectPrefabs.Length; i++) {
@@ -22,7 +21,6 @@ public class ObjectManager : MonoBehaviour {
         return null;
     }
 
-
     public GameObject GetObject(string type) {
         foreach(GameObject obj in pooledObjs) {
             if(obj.name.Equals(type) && !obj.activeInHierarchy) {
@@ -33,5 +31,4 @@ public class ObjectManager : MonoBehaviour {
 
         return Generate(type, true);
     }
-
 }

@@ -1175,6 +1175,7 @@ MonoBehaviour:
   Vehicles:
   - {fileID: 1310065707}
   - {fileID: 2028799934}
+  moneyText: {fileID: 1696562837}
 --- !u!4 &435202033
 Transform:
   m_ObjectHideFlags: 0
@@ -2017,7 +2018,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 200, y: -118}
-  m_SizeDelta: {x: 180, y: 150}
+  m_SizeDelta: {x: 150, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &799747742
 MonoBehaviour:
@@ -2315,10 +2316,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 752a7d2a566eeb84bbfde2d793953bbb, type: 3}
-    m_FontSize: 200
+    m_FontSize: 170
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 2
+    m_MinSize: 1
     m_MaxSize: 200
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -3428,7 +3429,7 @@ GameObject:
   - component: {fileID: 1696562838}
   - component: {fileID: 1696562837}
   m_Layer: 5
-  m_Name: Text
+  m_Name: MoneyText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3911,7 +3912,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -200, y: -117.999985}
-  m_SizeDelta: {x: 180, y: 150}
+  m_SizeDelta: {x: 150, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2006598881
 MonoBehaviour:
