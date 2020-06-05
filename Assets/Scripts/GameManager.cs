@@ -97,7 +97,7 @@ public class GameManager : Singleton<GameManager> {
             fuelGauge.color = new Color(1, fuelGauge.fillAmount * 0.8f * 2f, 0, 1);  //게이지가 줄어들수록 그라데이션 효과
             
             if(fuelGauge.fillAmount <= 0.3f) {  //연료 부족 경고 애니메이션
-                fuelWarning.SetActive(true);
+                if(!isDie) fuelWarning.SetActive(true);
                 if(fuelGauge.fillAmount == 0f)  //연료가 다 떨어져서 게임 오버
                     StartGameOver();
             }
