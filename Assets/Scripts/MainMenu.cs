@@ -12,7 +12,10 @@ public class MainMenu : MonoBehaviour {
     private GameObject[] content;
 
     [SerializeField]
-    private Text moneyText;
+    private Text moneyText, cantBuyText;
+
+    [SerializeField]
+    private AudioSource audio;
 
     private float scroll_pos = 0, distance;
     private float[] pos;
@@ -28,10 +31,10 @@ public class MainMenu : MonoBehaviour {
             PlayerPrefs.SetInt("Stage_Mars", 0);
             PlayerPrefs.SetInt("Stage_Cave", 0);
             PlayerPrefs.SetInt("Vehicle_Motorcycle", 0);
-            PlayerPrefs.SetInt("Money", 20000);
+            PlayerPrefs.SetInt("Money", 5000);
         }
         LoadData();
-        MenuChange(1);
+        MenuChange(1);  //초기에는 스크롤 뷰를 차량 콘텐츠로
         start = false;
     }
 
@@ -39,10 +42,12 @@ public class MainMenu : MonoBehaviour {
     private void LoadData() {
         Stages[1].transform.GetChild(1).gameObject.SetActive(PlayerPrefs.GetInt("Stage_Mars").Equals(0));
         Stages[1].GetComponent<Button>().enabled = PlayerPrefs.GetInt("Stage_Mars").Equals(0);
-        Stages[2].transform.GetChild(1).gameObject.SetActive(PlayerPrefs.GetInt("Stage_Cave").Equals(0));
-        Stages[2].GetComponent<Button>().enabled = PlayerPrefs.GetInt("Stage_Cave").Equals(0);
+        Stages[2].transform.GetChild(1).gameObject.SetActive(true);
+        Stages[3].transform.GetChild(1).gameObject.SetActive(true);
         Vehicles[1].transform.GetChild(1).gameObject.SetActive(PlayerPrefs.GetInt("Vehicle_Motorcycle").Equals(0));
         Vehicles[1].GetComponent<Button>().enabled = PlayerPrefs.GetInt("Vehicle_Motorcycle").Equals(0);
+        Vehicles[2].transform.GetChild(1).gameObject.SetActive(true);
+        Vehicles[3].transform.GetChild(1).gameObject.SetActive(true);
 
         moneyText.text = PlayerPrefs.GetInt("Money").ToString();
     }
@@ -51,7 +56,6 @@ public class MainMenu : MonoBehaviour {
         //스크롤 뷰 사용하기
         if(Input.GetMouseButton(0)) {
             scroll_pos = scrollbar.GetComponent<Scrollbar>().value;
-            changeIndex = true;
         }
         else {
             for(int i = 0; i < pos.Length; i++) {
@@ -60,6 +64,7 @@ public class MainMenu : MonoBehaviour {
                     selectedIndex = i;
                 }
             }
+            changeIndex = true;
         }
 
         //선택된 콘텐츠는 사이즈를 크게, 나머지 콘텐츠는 사이즈를 작게
@@ -82,9 +87,11 @@ public class MainMenu : MonoBehaviour {
     public void MenuChange(int index) {
         //잠금해제되지않은 콘텐츠가 선택된 채로 콘텐츠 종류를 바꾸려고 하면, 구매 여부를 묻도록 한다.
         if(!CheckPurchased() && !start) {
-            purchaseUI.SetActive(true);
-            return;
-        }
+            if(!(selectedMenuIndex == 0 && selectedIndex > 1 || selectedMenuIndex == 1 && selectedIndex > 1)) {
+                purchaseUI.SetActive(true);
+                return;
+            }
+        }    
         selectedMenuIndex = index;  //선택한 콘텐츠 종류를 변수에 저장
 
         pos = new float[Contents[index].transform.childCount];
@@ -109,59 +116,55 @@ public class MainMenu : MonoBehaviour {
 
     //잠금해제 되지 않은 것을 구매하고 데이터 변경.
     public void Purchase() {
-        int price;
-        if(selectedMenuIndex.Equals(0)) {
-            if(selectedIndex.Equals(1))
-                PlayerPrefs.SetInt("Stage_Mars", 1);
-            else
-                PlayerPrefs.SetInt("Stage_Cave", 1);
-            price = int.Parse(Stages[selectedIndex].transform.GetChild(2).GetChild(2).GetComponent<Text>().text);
+        int price, moneyOwned = PlayerPrefs.GetInt("Money");
+        if(selectedMenuIndex.Equals(0)) {  //스테이지
+            price = int.Parse(Stages[selectedIndex].transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<Text>().text);
+            if(moneyOwned - price < 0) { cantBuyText.GetComponent<Animator>().SetTrigger("warning"); return; }
+            if(selectedIndex.Equals(1)) PlayerPrefs.SetInt("Stage_Mars", 1);
+            
         }
-        else {
+        else {  //차량
+            price = int.Parse(Vehicles[selectedIndex].transform.GetChild(1).gameObject.transform.GetChild(1).GetComponent<Text>().text);
+            if(moneyOwned - price < 0) { cantBuyText.GetComponent<Animator>().SetTrigger("warning"); return; }
             PlayerPrefs.SetInt("Vehicle_Motorcycle", 1);
-            price = int.Parse(Vehicles[selectedIndex].transform.GetChild(2).GetChild(2).GetComponent<Text>().text);
         }
-
-        PlayerPrefs.SetInt("Money", PlayerPrefs.GetInt("Money") - price);
+        PlayerPrefs.SetInt("Money", moneyOwned - price);
+        audio.Play();
         LoadData();
     }
 
     //선택된 콘텐츠가 잠금해제(구매) 되었는지 여부 확인
     private bool CheckPurchased() {
-        if(selectedMenuIndex.Equals(0))
+        if(selectedMenuIndex.Equals(0)) {
             if(selectedIndex != 0)
                 return !Stages[selectedIndex].transform.GetChild(1).gameObject.activeSelf;
-            else
-            if(selectedIndex != 0)
+        }
+        else { 
+            if(selectedIndex != 0) 
                 return !Vehicles[selectedIndex].transform.GetChild(1).gameObject.activeSelf;
+        }
         return true;
     }
 
     //선택된 콘텐츠 인덱스를 데이터에 저장
     private void SaveSelectedData(int index) {
         if(selectedMenuIndex.Equals(0)) {
+            if(!CheckPurchased()) return; 
             PlayerPrefs.SetInt("Stage", index);
-            //if(index != 0) {
-            //    foreach(var obj in Stages)
-            //        obj.GetComponent<Button>().enabled = false;
-            //    Stages[index].GetComponent<Button>().enabled = true;
-            //}
         }
         else {
+            if(!CheckPurchased()) return; 
             PlayerPrefs.SetInt("Vehicle", index);
-            //if(index != 0) {
-            //    foreach(var obj in Vehicles)
-            //        obj.GetComponent<Button>().enabled = false;
-            //    Vehicles[index].GetComponent<Button>().enabled = true;
-            //}
         }
     }
 
     //게임 시작 버튼을 누르면 게임을 시작
     public void GameStart() {
         if(!CheckPurchased()) {
-            purchaseUI.SetActive(true);
-            return;
+            if(!(selectedMenuIndex == 0 && selectedIndex > 1 || selectedMenuIndex == 1 && selectedIndex > 1)) {
+                purchaseUI.SetActive(true);
+                return;
+            }
         }
         fadeOut.GetComponent<Animator>().SetTrigger("FadeOut");
     }

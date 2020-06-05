@@ -121,7 +121,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 4536955731089873839}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 46156a9ad5026bd47868bcf84daad147, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -641,7 +641,7 @@ WheelJoint2D:
   m_ConnectedAnchor: {x: 0.81500006, y: -0.594}
   m_Suspension:
     m_DampingRatio: 0.7
-    m_Frequency: 30
+    m_Frequency: 15
     m_Angle: 90
   m_UseMotor: 0
   m_Motor:
@@ -786,7 +786,7 @@ WheelJoint2D:
   m_ConnectedAnchor: {x: -0.8049998, y: -0.573}
   m_Suspension:
     m_DampingRatio: 0.7
-    m_Frequency: 30
+    m_Frequency: 15
     m_Angle: 90
   m_UseMotor: 0
   m_Motor:
@@ -832,7 +832,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 4536955732413204307}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 46156a9ad5026bd47868bcf84daad147, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -875,7 +875,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4536955732796367340}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.31, y: 0.53, z: 0}
+  m_LocalPosition: {x: 0, y: 0.53, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4536955731550353524}
@@ -902,7 +902,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frontTire: {fileID: 4536955731919613370}
   backTire: {fileID: 4536955732052728160}
-  speed: 2500
+  speed: 2100
+  moveStop: 0
 --- !u!50 &4536955732796367314
 Rigidbody2D:
   serializedVersion: 4

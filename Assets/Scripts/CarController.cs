@@ -11,26 +11,33 @@ public class CarController : MonoBehaviour {
     private float movement, moveSpeed, fuel = 1, fuelConsumption = 0.1f;
     public float Fuel { get => fuel; set { fuel = value; } }
 
+    public bool moveStop = false;
+
     public Vector3 StartPos { get; set; }
 
     private void Update() {
-        //movement = Input.GetAxis("Horizontal");
+        //PC : movement = Input.GetAxis("Horizontal");
+        //엔진 버튼 누를 시
         if(GameManager.Instance.GasBtnPressed) {
             movement += 0.009f;
             if(movement > 1f)
                 movement = 1f;
         }
+
+        //브레이크 버튼 누를 시
         else if(GameManager.Instance.BrakeBtnPressed) {
             movement -= 0.009f;
             if(movement < -1f)
                 movement = -1f;
         }
+
+        //아무 버튼도 누르지 않을 시
         else if(!GameManager.Instance.GasBtnPressed && !GameManager.Instance.BrakeBtnPressed) {
             movement = 0;
         }
         moveSpeed = movement * speed;
 
-        GameManager.Instance.FuelConsume();  //계속해서 연료가 소모됨
+        GameManager.Instance.FuelConsume();  //연료 소모에 따라 여러가지를 갱신
     }
 
     private void FixedUpdate() {
@@ -50,6 +57,12 @@ public class CarController : MonoBehaviour {
             backTire.motor = motor;
         }
 
+        //게임 오버 시에 차량 속도 0으로
+        if(GameManager.Instance.isDie && moveStop) {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        }
+
+        //움직이는 만큼 계속해서 연료 소비
         fuel -= fuelConsumption * Mathf.Abs(movement) * Time.fixedDeltaTime;
     }
 }
