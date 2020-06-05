@@ -31,7 +31,7 @@ public class MainMenu : MonoBehaviour {
             PlayerPrefs.SetInt("Stage_Mars", 0);
             PlayerPrefs.SetInt("Stage_Cave", 0);
             PlayerPrefs.SetInt("Vehicle_Motorcycle", 0);
-            PlayerPrefs.SetInt("Money", 5000);
+            PlayerPrefs.SetInt("Money", 37000);
         }
         LoadData();
         MenuChange(1);  //초기에는 스크롤 뷰를 차량 콘텐츠로
